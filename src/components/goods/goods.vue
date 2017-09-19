@@ -30,7 +30,7 @@
                                                                 v-show="food.oldPrice">￥{{food.oldPrice}}</span>
                 </div>
                 <div class="cartcontrol-wrapper">
-                  <cartcontrol :food="food"></cartcontrol>
+                  <cartcontrol :food="food" @add="addFood"></cartcontrol>
                 </div>
               </div>
             </li>
@@ -38,13 +38,14 @@
         </li>
       </ul>
     </div>
-    <shopcart :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></shopcart>
+    <shopcart ref="shopcart" :select-foods="selectFoods" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></shopcart>
   </div>
 </template>
 <script type="text/ecmascript-6">
   import BScroll from 'better-scroll'
   import shopcart from '../../components/shopcart/shiopcart'
   import cartcontrol from '../../components/cartcontrol/cartcontrol'
+
     export default {
       props: {
         seller: {
@@ -68,13 +69,23 @@
             }
           }
           return 0;
+        },
+        selectFoods () {
+          let foods = [];
+          this.goods.forEach((good)=>{
+            good.foods.forEach((food)=>{
+              if(food.count){
+                foods.push(food);
+              }
+            });
+          });
+          return foods;
         }
       },
       created() {
         this.classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee'];
-
         this.$http.get('/api/goods').then((res) => {
-          this.goods = res.data.goods
+          this.goods = res.data.goods;
           this.$nextTick(() => {
             this._initScroll();
             this._calculateHeight();
@@ -91,11 +102,17 @@
           this.foodsScroll.scrollToElement(el, 300);
           console.log(index);
         },
+        addFood(target) {
+          this._drop(target);
+        },
+        _drop(target) {
+          // 体验优化,异步执行下落动画
+          this.$nextTick(() => {
+            this.$refs.shopcart.drop(target);
+          });
+        },
         _initScroll () {
           this.menuScroll = new BScroll(this.$refs.menuWrapper,{
-            click: true
-          });
-          this.menuScroll = new BScroll(this.$refs.menuWrapper, {
             click: true
           });
           this.foodsScroll = new BScroll(this.$refs.foodsWrapper, {
@@ -213,12 +230,8 @@
            .count
               margin-right 12px
          .price
-            font-weight 700
-            line-height 24px
-         .cartcontrol-wrapper
-           position absolute
-           right 0
-           bottom 12px
+           font-weight 700
+           line-height 24px
            .now
              margin-right 8px
              font-size 14px
@@ -227,4 +240,13 @@
              text-decoration line-through
              font-size 10px
              color rgba(147,153,159,0)
+         .cartcontrol-wrapper
+           position absolute
+           right 0
+           bottom 12px
+           .now
+             margin-right 8px
+             font-size 14px
+             color rgb(240,20,20)
+
 </style>
