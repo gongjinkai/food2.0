@@ -1,4 +1,5 @@
 <template>
+  <div>
   <div class="shopcart">
     <div class="content" @click="toggleList">
       <div class="content-left">
@@ -11,7 +12,7 @@
         <div class="price" :class="{'highlight':totalPrice>0}">￥{{totalPrice}}元</div>
         <div class="desc">另需配送费￥{{deliveryPrice}}元</div>
       </div>
-      <div class="content-right">
+      <div class="content-right" @click.stop.prevent="pay">
         <div class="pay" :class="payClass">
           {{payDesc}}
         </div>
@@ -31,9 +32,9 @@
     <div class="shopcart-list" v-show="listShow">
       <div class="list-header">
         <h1 class="title">购物车</h1>
-        <span class="empty">清空</span>
+        <span class="empty" @click="empty">清空</span>
       </div>
-      <div class="list-content" ref="list-content">
+      <div class="list-content" ref="listContent">
         <ul>
           <li class="food" v-for="food in selectFoods">
             <span class="name">{{food.name}}</span>
@@ -41,7 +42,7 @@
               <span>￥{{food.price*food.count}}</span>
             </div>
             <div class="cartcontrol-wrapper">
-              <cartcontrol :food="food"></cartcontrol>
+              <cartcontrol :food="food" @add="addFood"></cartcontrol>
             </div>
           </li>
         </ul>
@@ -49,6 +50,10 @@
     </div>
     </transition>
    </div>
+    <transition name="fade">
+      <div class="list-mask" v-show="listShow" @click="hideList"></div>
+    </transition>
+  </div>
 </template>
 <script type="text/ecmascript-6">
   import BScroll from 'better-scroll'
@@ -138,17 +143,19 @@
       },
       listShow () {
         if(!this.totalCount){
-          this.fold = true
+          this.fold = true;
           return false
         }
         let show = !this.fold;
-        if(!this.scroll){
-          this.$nextTick(()=>{
-            this.scroll = new BScroll(this.$refs.listContent,{
-              click : true
-            });
-          })
-        }
+          this.$nextTick(() => {
+            if (!this.scroll) {
+              this.scroll = new BScroll(this.$refs.listContent, {
+                click: true
+              });
+            } else {
+              this.scroll.refresh();
+            }
+          });
         return show
       }
     },
@@ -206,6 +213,20 @@
           return
         }
         this.fold = !this.fold
+      },
+      empty () {
+        this.selectFoods.forEach((food)=>{
+          food.count = 0;
+        })
+      },
+      hideList () {
+        this.fold = true;
+      },
+      pay () {
+        if(this.totalPrice<this.minPrice){
+          return;
+        }
+        window.alert(`支付${this.totalPrice}元`)
       }
     },
     components:{
@@ -366,4 +387,19 @@
             right: 0
             bottom: 6px
 
+  .list-mask
+    position fixed
+    width 100%
+    height 100%
+    top 0
+    left 0
+    opacity: 1
+    z-index 40
+    backdrop-filter blur(10px)
+    background rgba(7,17,27,0.6)
+    &.fade-transition
+      transition all 0.5s
+    &.fade-enter,&.fade-leave-active
+      opacity 0
+      background rgba(7,17,27,0 )
 </style>
