@@ -9,6 +9,16 @@
       food:{
         type: Object
       }
+    },
+    data () {
+      return {
+        showFlag: false
+      }
+    },
+    methods:{
+      show () {
+        this.showFlag = true
+      }
     }
   }
 </script>
@@ -16,8 +26,8 @@
   .food
     position fixed
     left 0
-    top 48px
-    bottom 0
+    top 0
+    bottom 48px
     z-index 30
     width 100%
     background #fff
