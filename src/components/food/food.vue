@@ -1,7 +1,9 @@
 <template>
-  <div v-show="showFlag" class="food">
+  <transition name="move">
+    <div v-show="showFlag" class="food">
 
-  </div>
+    </div>
+  </transition>
 </template>
 <script type="text/ecmascript-6">
   export default {
@@ -24,11 +26,16 @@
 </script>
 <style lang="stylus" rel="stylesheet/stylus">
   .food
-    position fixed
+    position: fixed
     left 0
     top 0
     bottom 48px
     z-index 30
-    width 100%
+    width: 100%
     background #fff
+    transform translate3d(0, 0, 0)
+    &.move-enter-active,&.move-leave-active
+      transition all 0.2s linear
+    &.move-enter, &.move-leave-active
+      transform translate3d(100%, 0, 0)
 </style>
