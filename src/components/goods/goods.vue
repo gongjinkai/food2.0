@@ -13,7 +13,7 @@
     </div>
     <div class="foods-wrapper" ref="foodsWrapper">
       <ul>
-        <li v-for="item in goods">
+        <li v-for="item in goods" ref="foodList">
           <h1 class="title">{{item.name}}</h1>
           <ul>
             <li v-for="food in item.foods" class="food-item food-list-hook" @click="selectFood(food,$event)">
@@ -41,7 +41,7 @@
     </div>
     <shopcart ref="shopcart" :select-foods="selectFoods" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></shopcart>
   </div>
-  <food :food="selectedFood" ref="food"></food>
+    <food :food="selectedFood" ref="food"></food>
   </div>
 </template>
 <script type="text/ecmascript-6">
@@ -66,11 +66,11 @@
       },
       computed: {
         currentIndex() {
-          for(let i=0;i<this.listHeight.length;i++) {
+          for (let i = 0; i < this.listHeight.length; i++) {
             let height1 = this.listHeight[i];
-            let height2 = this.listHeight[i+1];
-            if(!height2 || (this.scrollY >= height1 && this.scrollY < height2)){
-              return i
+            let height2 = this.listHeight[i + 1];
+            if (!height2 || (this.scrollY >= height1 && this.scrollY < height2)) {
+              return i;
             }
           }
           return 0;
@@ -98,14 +98,13 @@
         })
       },
       methods: {
-        selectMenu (index,event) {
-          if(!event._constructed){
-            return
+        selectMenu(index, event) {
+          if (!event._constructed) {
+            return;
           }
-          let foodList = this.$refs.foodsWrapper.getElementsByClassName('food-list-hook');
+          let foodList = this.$refs.foodList;
           let el = foodList[index];
           this.foodsScroll.scrollToElement(el, 300);
-          console.log(index);
         },
         addFood(target) {
           this._drop(target);
@@ -129,11 +128,10 @@
           });
         },
         _calculateHeight() {
-          let foodList = this.$refs.foodsWrapper.getElementsByClassName('food-list-hook');
+          let foodList = this.$refs.foodList;
           let height = 0;
           this.listHeight.push(height);
           for (let i = 0; i < foodList.length; i++) {
-            //获取每个li的高度，放入一个数组中
             let item = foodList[i];
             height += item.clientHeight;
             this.listHeight.push(height);
@@ -252,7 +250,7 @@
            .old
              text-decoration line-through
              font-size 10px
-             color rgba(147,153,159,0)
+             color: rgb(147, 153, 159)
          .cartcontrol-wrapper
            position absolute
            right 0
