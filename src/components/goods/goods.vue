@@ -41,7 +41,7 @@
     </div>
     <shopcart ref="shopcart" :select-foods="selectFoods" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></shopcart>
   </div>
-    <food :food="selectedFood" ref="food"></food>
+    <food :food="selectedFood" ref="food" @add="addFood"></food>
   </div>
 </template>
 <script type="text/ecmascript-6">
@@ -107,6 +107,7 @@
           this.foodsScroll.scrollToElement(el, 300);
         },
         addFood(target) {
+          console.log(1);
           this._drop(target);
         },
         _drop(target) {

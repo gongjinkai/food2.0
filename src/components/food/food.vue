@@ -20,7 +20,7 @@
           </div>
         </div>
         <div class="cartcontrol-wrapper">
-          <cartcontrol :food="food"></cartcontrol>
+          <cartcontrol :food="food" @add="addFood"></cartcontrol>
         </div>
         <transition name="fade">
           <div @click.stop.prevent="addFirst" class="buy" v-show="!food.count || food.count===0">
@@ -36,12 +36,12 @@
   import Vue from 'vue'
   import cartcontrol from '../../components/cartcontrol/cartcontrol'
   export default {
-    props:{
-      food:{
+    props: {
+      food: {
         type: Object
       }
     },
-    data () {
+    data() {
       return {
         showFlag: false
       }
@@ -67,7 +67,7 @@
           return;
         }
         this.$emit('add', event.target);
-        Vue.set(this.food, 'count', 1);
+        Vue.set(this.food, 'count', 1)
       }
     },
     components: {
@@ -145,18 +145,18 @@
     right 12px
     bottom 12px
   .buy
-    position absolute
-    right 18px
-    bottom 18px
+    position: absolute
+    right: 18px
+    bottom: 18px
     z-index: 10
-    height 24px
-    line-height 24px
-    padding 0 12px
-    box-sizing border-box
-    border-radius 12px
-    font-size 10px
-    color #fff
-    background rgb(0,160,220)
+    height: 24px
+    line-height: 24px
+    padding: 0 12px
+    box-sizing: border-box
+    border-radius: 12px
+    font-size: 10px
+    color: #fff
+    background: rgb(0, 160, 220)
     opacity: 1
     &.fade-enter-active, &.fade-leave-active
       transition: all 0.2s
