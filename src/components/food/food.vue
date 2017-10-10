@@ -68,6 +68,9 @@
         }
         this.$emit('add', event.target);
         Vue.set(this.food, 'count', 1)
+      },
+      addFood() {
+        this.$emit('add', event.target);
       }
     },
     components: {
