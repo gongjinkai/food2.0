@@ -1,11 +1,11 @@
 <template>
   <div class="ratingselect">
     <div class="rating-type border-1px">
-      <span class="block positive" :class="{'active':selectType===2}">{{desc.all}}<span class="count">47</span></span>
+      <span class="block positive" :class="{'active':selectType===2}" @click="select(2,$event)">{{desc.all}}<span class="count">47</span></span>
       <span class="block positive" :class="{'active':selectType===0}">{{desc.positive}}<span class="count">40</span></span>
       <span class="block negative" :class="{'active':selectType===1}">{{desc.negative}}<span class="count">7</span></span>
     </div>
-    <div class="switch">
+    <div class="switch" :class="{'on':onlyContent}" @click="toggleContent($event)">
       <span class="icon-check_circle"></span>
       <span class="text">只看有内容的评价</span>
     </div>
@@ -41,6 +41,22 @@
           }
         }
       }
+    },
+    methods: {
+      select(type,event){
+        if(!event._constructed){
+          return
+        }
+        this.selectType = type;
+        this.$emit('ratingtype.select',type)
+      },
+      toggleContent(event){
+        if(!event._constructed){
+          return
+        }
+        this.onlyContent = !this.onlyContent;
+        this.$emit('content.toggle',this.onlyContent)
+      }
     }
   }
 </script>
@@ -73,4 +89,22 @@
           background rgba(77,85,93,0.2)
           &.active
             background rgb(77,85,93)
+
+
+    .switch
+      padding 12px 18px
+      line-height 24px
+      border-bottom 1px solid rgba(7,17,27,0.1)
+      color rgb(147,153,159)
+      font-size 0
+      &.on
+        .icon-check_circle
+          color #00c850
+      .icon-check_circle
+        margin-right 4px
+        font-size 24px
+      .text
+        display inline-block
+        vertical-align top
+        font-size 12px
 </style>
