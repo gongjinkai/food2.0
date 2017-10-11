@@ -35,7 +35,12 @@
         <split></split>
         <div class="rating">
           <h1 class="title">商品评价</h1>
-          <ratingselect :select-type="selectType" :only-content="onlyContent" :desc="desc" :ratings="food.ratings"></ratingselect>
+          <ratingselect @select="selectRating" @toggle="toggleContent" :selectType="selectType"
+                        :onlyContent="onlyContent" :desc="desc"
+                        :ratings="food.ratings"></ratingselect>
+          <div class="rating-wrapper">
+            
+          </div>
         </div>
       </div>
     </div>
@@ -68,7 +73,7 @@
           positive: '推荐',
           negative: '吐槽'
         }
-      }
+      };
     },
     methods: {
       show() {
@@ -97,6 +102,18 @@
       },
       addFood() {
         this.$emit('add', event.target);
+      },
+      selectRating(type) {
+        this.selectType = type;
+        this.$nextTick(() => {
+          this.scroll.refresh();
+        });
+      },
+      toggleContent() {
+        this.onlyContent = !this.onlyContent;
+        this.$nextTick(() => {
+          this.scroll.refresh();
+        });
       }
     },
     components: {
