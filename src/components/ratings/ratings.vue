@@ -24,19 +24,96 @@
           </div>
         </div>
       </div>
+      <split></split>
+      <ratingselect @select="selectRating" @toggle="toggleContent" :selectType="selectType" :onlyContent="onlyContent"
+                    :ratings="ratings"></ratingselect>
+      <div class="ratings-wrapper">
+        <ul>
+          <li v-for="rating in ratings" class="rating-item">
+            <div class="avatar">
+              <img :src="rating.avatar">
+            </div>
+            <div class="content">
+              <h1 class="name">{{rating.username}}</h1>
+              <div class="star-wrapper">
+                <star :size="24" :score="rating.score"></star>
+                <span class="delivery" v-show="rating.deliveryTime">{{rating.deliveryTime}}</span>
+              </div>
+              <p class="text">{{rating.text}}</p>
+              <div class="recommend"  v-show="rating.recommend && rating.recommend.length">
+                <span class="icon-thumb_up"></span>
+                <span class="item" v-for="item in rating.recommend">{{item}}</span>
+              </div>
+              <div class="time">
+                {{rating.rateTime | formatDate}}
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 </template>
 <script type="text/ecmascript-6">
   import star from '../../components/star/star'
+  import ratingselect from '../../components/ratingselect/ratingselect'
+  import split from '../../components/split/split'
+  import {formatDate} from '../../common/js/date';
+
+  const ALL = 2;
   export default {
     props:{
       seller: {
         type: Object
       }
     },
+    data () {
+      return {
+        ratings: [],
+        selectType: ALL,
+        onlyContent: true
+      }
+    },
+    created () {
+      this.$http.get('/api/ratings').then((res)=>{
+        this.ratings = res.data.ratings;
+      })
+    },
+    filters: {
+      formatDate(time){
+        let date = new Date(time);
+        return formatDate(date,'yyyy-MM-dd hh:mm');
+      }
+    },
+    methods: {
+      needShow(type,text) {
+        if(this.onlyContent && !text){
+          return false
+        }
+        if(this.selectType === ALL){
+          return true
+        }
+        else{
+          return type === this.selectType;
+        }
+      },
+      selectRating(type) {
+        this.selectType = type;
+        this.$nextTick(() => {
+          this.scroll.refresh();
+        });
+      },
+      toggleContent() {
+        this.onlyContent = !this.onlyContent;
+        this.$nextTick(() => {
+          this.scroll.refresh();
+        });
+      }
+    },
     components: {
-      star
+      star,
+      ratingselect,
+      split
     }
   }
 </script>
@@ -57,6 +134,9 @@
         width: 137px
         border-right: 1px solid rgba(7, 17, 27, 0.1)
         text-align: center
+        @media only screen and (max-width 320px)
+          flex 0 0 120px
+          width 120px
         .score
           margin-bottom 6px
           line-height 28px
@@ -73,7 +153,9 @@
           color rgb(147,153,159)
       .overview-right
         flex 1
-        padding-left 24px
+        padding 6px 0 6px 24px
+        @media only screen and (max-width 320px)
+          padding-left 6px
         .score-wrapper
           margin-bottom 8px
           font-size 0

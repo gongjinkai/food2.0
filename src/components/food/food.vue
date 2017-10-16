@@ -113,6 +113,9 @@
         this.$emit('add', event.target);
         Vue.set(this.food, 'count', 1)
       },
+      addFood() {
+        this.$emit('add', event.target);
+      },
       needShow(type,text) {
         if(this.onlyContent && !text){
           return false
@@ -123,9 +126,6 @@
         else{
           return type === this.selectType;
         }
-      },
-      addFood() {
-        this.$emit('add', event.target);
       },
       selectRating(type) {
         this.selectType = type;
