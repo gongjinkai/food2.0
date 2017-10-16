@@ -1,5 +1,5 @@
 <template>
-  <div class="ratings">
+  <div class="ratings" ref="ratings">
     <div class="ratings-content">
       <div class="overview">
         <div class="overview-left">
@@ -29,9 +29,9 @@
                     :ratings="ratings"></ratingselect>
       <div class="ratings-wrapper">
         <ul>
-          <li v-for="rating in ratings" class="rating-item">
+          <li v-for="rating in ratings" class="rating-item" v-show="needShow(rating.rateType, rating.text)">
             <div class="avatar">
-              <img :src="rating.avatar">
+              <img width="28" height="28" :src="rating.avatar">
             </div>
             <div class="content">
               <h1 class="name">{{rating.username}}</h1>
@@ -55,6 +55,7 @@
   </div>
 </template>
 <script type="text/ecmascript-6">
+  import BScroll from 'better-scroll';
   import star from '../../components/star/star'
   import ratingselect from '../../components/ratingselect/ratingselect'
   import split from '../../components/split/split'
@@ -77,6 +78,11 @@
     created () {
       this.$http.get('/api/ratings').then((res)=>{
         this.ratings = res.data.ratings;
+        this.$nextTick(() => {
+          this.scroll = new BScroll(this.$refs.ratings, {
+            click: true
+          });
+        });
       })
     },
     filters: {
@@ -118,6 +124,7 @@
   }
 </script>
 <style  lang="stylus" rel="stylesheet/stylus">
+  @import "../../common/stylus/mixin"
   .ratings
     position: absolute
     top: 174px
@@ -186,4 +193,34 @@
             font-size 12px
             color rgb(147,153,159)
 
+    .ratings-wrapper
+      padding 0 18px
+      .rating-item
+        display flex
+        padding 18px 0
+        border-1px(rgba(7,17,27,0.1))
+        .avatar
+          flex 0 0 28px
+          width 28px
+          margin-right 12px
+          img
+            border-radius 50%
+        .content
+          position relative
+          flex 1
+          .name
+            margin-bottom 4px
+            line-height 12px
+            font-size 10px
+            color rgb(7,17,27)
+          .star-wrapper
+            margin-bottom 6px
+            font-size 0
+            .star
+              display inline-block
+              margin-right 6px
+              vertical-align top
+            .delivery
+              display inline-block
+              vertical-align top
 </style>
