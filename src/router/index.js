@@ -4,7 +4,7 @@ import Goods from '../components/goods/goods'
 import Seller from '../components/seller/seller'
 import Ratings from '../components/ratings/ratings'
 
-Vue.use(Router)
+Vue.use(Router);
 
 export default new Router({
   routes: [
