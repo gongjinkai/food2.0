@@ -74,4 +74,25 @@
           display inline-block
           vertical-align top
           font-size 10px
+      .remark
+        display flex
+        padding-top 18px
+        .block
+          flex 1
+          text-align center
+          border-right 1px solid rgba(7,17,27,0.1)
+          &:last-child
+            border none
+          h2
+            margin-bottom 4px
+            line-height 10px
+            font-size 10px
+            color rgb(147,153,159)
+          .content
+            line-height 24px
+            font-size 10px
+            color rba(7,17,27)
+          .stress
+            font-size 24px
+
 </style>
