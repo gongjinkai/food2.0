@@ -70,10 +70,12 @@
           margin-right 8px
           vertical-align top
         .text
-          margin-right 12px
           display inline-block
+          margin-right 12px
+          line-height 18px
           vertical-align top
           font-size 10px
+          color rgb(77,85,93)
       .remark
         display flex
         padding-top 18px
