@@ -88,6 +88,11 @@
         });
       }
     },
+    data () {
+      return {
+
+      }
+    },
     mounted() {
       this.$nextTick(() => {
         this._initScroll();
